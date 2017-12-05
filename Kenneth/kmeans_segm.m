@@ -1,20 +1,12 @@
 function [ segmentation, centers, diffs ] = kmeans_segm(image, K, L, seed)
 
-scale_factor = 1.0;  % image downscale factor
-image_sigma = 1.0;   % image preblurring scale
-
-image = imresize(image, scale_factor);
-d = 2*ceil(image_sigma*2) + 1;
-h = fspecial('gaussian', [d d], image_sigma);
-image = imfilter(image, h);
-
-[img_dimx, img_dimy, layer] = size(image);
-Ivec = single(reshape(image, img_dimx*img_dimy, layer));
+[height, width, depth] = size(image);
+Ivec = single(reshape(image, height*width, depth));
 rng(seed);
 
 % Randomly initialize the K cluster centers
 col_range = max(Ivec) - min(Ivec);
-centers = single(zeros(K,layer));
+centers = single(zeros(K,depth));
 for i = 1:K
     centers(i,:) = rand()*(col_range/K) + (i-1)*col_range/K + min(Ivec);
 end
@@ -35,7 +27,7 @@ for i = 1:L
 end
 
 [~,index] = min(dist');
-segmentation = reshape(index, img_dimx, img_dimy);
+segmentation = reshape(index, height, width);
 
 %{
 % To show the convergence
