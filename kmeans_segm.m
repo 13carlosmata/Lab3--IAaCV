@@ -6,9 +6,10 @@ Ivec = reshape(image,width*height, dim);
 % Randomly initialize the K cluster centers
 range = max(Ivec)-min(Ivec);
 centers = zeros(K,dim);
+sections = range/K;
 
 for i=1:K
-    centers(i,:) = rand()*(range/K) + (i-1)*range/K + min(Ivec);
+    centers(i,:) = rand()*(sections) + (i-1)*sections + min(Ivec);
 end
 
 % Compute all distances between pixels and cluster centers
