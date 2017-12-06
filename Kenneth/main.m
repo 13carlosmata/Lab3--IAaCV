@@ -59,7 +59,7 @@ pause;
 % Question 5, 6
 
 colour_bandwidth = 15.0; % color bandwidth
-radius = 10;              % maximum neighbourhood distance
+radius = 3;              % maximum neighbourhood distance
 ncuts_thresh = 0.2;      % cutting threshold
 min_area = 200;          % minimum area of segment
 max_depth = 8;           % maximum splitting depth
@@ -76,6 +76,7 @@ I = imfilter(I, h);
 segm = norm_cuts_segm(I, colour_bandwidth, radius, ncuts_thresh, min_area, max_depth);
 subplot(1,2,1); imshow(mean_segments(Iback, segm));
 subplot(1,2,2); imshow(overlay_bounds(Iback, segm));
+pause
 
 %% 5 Segmentation using graph cuts
 
@@ -89,10 +90,8 @@ I = imread('tiger1.jpg');
 I = imresize(I, scale_factor);
 Iback = I;
 area = int16(area*scale_factor);
-[ segm, prior ] = graphcut_segm(I, area, K, alpha, sigma);
 
-Inew = mean_segments(Iback, segm);
-I = overlay_bounds(Iback, segm);
-subplot(2,2,1); imshow(Inew);
-subplot(2,2,2); imshow(I);
+[ segm, prior ] = graphcut_segm(I, area, K, alpha, sigma);
+subplot(2,2,1); imshow(mean_segments(Iback, segm));
+subplot(2,2,2); imshow(overlay_bounds(Iback, segm));
 subplot(2,2,3); imshow(prior);
