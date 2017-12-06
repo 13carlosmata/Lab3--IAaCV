@@ -1,14 +1,14 @@
-function [ segmentation, centers, diffs ] = kmeans_segm(image, K, L, seed)
+function [ segmentation, centers ] = kmeans_segm(image, K, L, seed)
 
 [height, width, depth] = size(image);
 Ivec = single(reshape(image, height*width, depth));
 rng(seed);
 
 % Randomly initialize the K cluster centers
-col_range = max(Ivec) - min(Ivec);
+color_range = max(Ivec) - min(Ivec);
 centers = single(zeros(K,depth));
 for i = 1:K
-    centers(i,:) = rand()*(col_range/K) + (i-1)*col_range/K + min(Ivec);
+    centers(i,:) = rand()*(color_range/K) + (i-1)*color_range/K + min(Ivec);
 end
 
 dist = pdist2(Ivec, centers, 'euclidean');

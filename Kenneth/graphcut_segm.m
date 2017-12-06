@@ -24,7 +24,6 @@ for l=1:3
     fprob = mixture_prob(I, K, 10, mask);
     bprob = mixture_prob(I, K, 10, 1-mask);
     prior = reshape(fprob ./ (fprob + bprob), size(I,1), size(I,2), 1);
-    toc
 
     fprintf('Find minimum cut...\n');
     [u, erriter, i] = cmf_cut(prior, edge);
