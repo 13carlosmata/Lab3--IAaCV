@@ -115,8 +115,6 @@ L = 15;
 Inew = mean_segments(Iback, segm);
 I_o = overlay_bounds(Iback, segm);
 
-Inew = mean_segments(Iback, segm);
-I_o = overlay_bounds(Iback, segm);
 figure;
 subplot(1,3,1)
 imshow(Iback)
@@ -125,3 +123,36 @@ imshow(Inew);
 subplot(1,3,3)
 imshow(I_o);
 suptitle(['Tiger1 - K: ',int2str(K),' - L: ', int2str(L)])
+
+%%      Question 5 and 6
+S_BW = [4,8,15];
+C_BW = [2,15];
+
+I = imread('tiger3.jpg');
+I = imresize(I, scale_factor);
+Iback = I;
+d = 2*ceil(image_sigma*2) + 1;
+h = fspecial('gaussian', [d d], image_sigma);
+I = imfilter(I, h);
+figure
+ind = 1;
+for i=1:size(S_BW,2)
+    for j=1:size(C_BW,2)
+        segm = mean_shift_segm(I, S_BW(i), C_BW(j), 20);  
+        Inew = mean_segments(Iback, segm);
+        I_o = overlay_bounds(Iback, segm);
+        subplot(3,4,ind)
+        imshow(Inew);
+        title(['S: ', int2str(S_BW(i)), ' C: ', int2str(C_BW(j))]);
+        ind = ind+1;
+        subplot(3,4,ind);
+        imshow(I_o);
+        title(['S: ', int2str(S_BW(i)), ' C: ', int2str(C_BW(j))]);
+        ind = ind + 1;
+    end  
+end
+
+%%  Question 7
+
+
+

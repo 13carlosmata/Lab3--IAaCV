@@ -1,11 +1,8 @@
 function segm = mean_shift_segm(I, spatial_bandwidth, colour_bandwidth, num_iterations)
 
-tic
 fprintf('Find colour channels with K-means...\n');
 K = 16;
 [ segm, centers ] = kmeans_segm(I, K, 10, 4321);
-toc
-
 centers(isnan(centers)) = 0.0;
 %imshow(overlay_bounds(I, segm))
 %pause
@@ -26,14 +23,14 @@ h = fspecial('gaussian', [s s], spatial_bandwidth);
 mapsw = reshape(imfilter(maps, h), [width*height,K]) + 1e-6;
 mapsx = reshape(imfilter(mapx, h), [width*height,K]);
 mapsy = reshape(imfilter(mapy, h), [width*height,K]);
-toc
+
 
 fprintf('Search for high density points...\n');
 constC = -0.5/(colour_bandwidth^2);
 x = reshape(X, [width*height, 1]);
 y = reshape(Y, [width*height, 1]);
 Ic = single(reshape(I, [width*height, 3]));
-wei = exp(constC*pdist2(Ic, centers));
+wei = exp(constC*pdist2(single(Ic), single(centers)));
 for l = 1:num_iterations
     p = (round(x)-1)*height + round(y);
     ww = mapsw(p,:) .* wei;
@@ -44,7 +41,6 @@ for l = 1:num_iterations
     wei = bsxfun(@rdivide, ww, w);
     x = max(min(x, width), 1);
     y = max(min(y, height), 1);
-    toc
 end
 
 fprintf('Assign high density points to pixels...\n');
@@ -86,4 +82,4 @@ for y=1:height
     end
 end
 segm = reshape(mask, [height,width]);
-toc
+
