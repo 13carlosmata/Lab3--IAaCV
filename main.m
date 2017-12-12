@@ -154,5 +154,56 @@ end
 
 %%  Question 7
 
+colour_bandwidth = 20; % color bandwidth
+radius = 6;              % maximum neighbourhood distance
+ncuts_thresh = 0.2;      % cutting threshold
+min_area = 200;          % minimum area of segment
+max_depth = 8;           % maximum splitting depth
+scale_factor = 0.4;      % image downscale factor
+image_sigma = 2.0;       % image preblurring scale
+
+I = imread('tiger3.jpg');
+I = imresize(I, scale_factor);
+Iback = I;
+d = 2*ceil(image_sigma*2) + 1;
+h = fspecial('gaussian', [d d], image_sigma);
+I = imfilter(I, h);
+%%
+rango = [2,6,12,20];
+ind = 1;figure;
+for i=1:size(rango,2)
+    segm = norm_cuts_segm(I,colour_bandwidth , rango(i), ncuts_thresh, min_area, max_depth);
+    Inew = mean_segments(Iback, segm);
+    Io = overlay_bounds(Iback, segm);
+    subplot(2,4,ind);
+    ind = ind+1;
+    imshow(Inew)
+    subplot(2,4,ind)
+    ind = ind+1;
+    imshow(Io);
+    title(int2str(rango(i)));
+end
+
+%%
+
+colour_bandwidth = 11; % color bandwidth
+radius = 10;              % maximum neighbourhood distance
+ncuts_thresh = 0.2;      % cutting threshold
+min_area = 200;          % minimum area of segment
+max_depth = 8;           
+
+segm = norm_cuts_segm(I,colour_bandwidth, radius, ncuts_thresh, min_area, max_depth);
+Inew = mean_segments(Iback, segm);
+Io = overlay_bounds(Iback, segm);
+
+figure
+subplot(1,2,1);
+imshow(Inew)
+subplot(1,2,2)
+imshow(Io);
+suptitle(['tiger2 - radius: ', int2str(radius),' - Cbw: ', int2str(colour_bandwidth), '- TH: ', num2str(ncuts_thresh),' - Area: ', num2str(min_area), ' - Depth: ', num2str(max_depth)])
+
+%% 
+
 
 
